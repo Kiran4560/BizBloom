@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
 //signup function
+
 const addUser = async (req, res, next) => {
   //destructuring and storing requested data
   const { name, email, password } = req.body;
@@ -137,5 +138,5 @@ return isMatching;
 };
 
 
-
+exports.signup = addUser;
 exports.login = loginUser;
