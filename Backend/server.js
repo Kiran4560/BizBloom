@@ -20,7 +20,7 @@ const mongoose = require('mongoose');
 // Use IPv4 address to avoid potential IPv6 issues
 const dbName = 'mongodb://127.0.0.1:27017/BizBloom';
 
-mongoose.connect(dbName, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbName, {  })
   .then(() => {
     console.log('Connected to MongoDB');
   })

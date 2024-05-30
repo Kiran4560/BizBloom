@@ -81,3 +81,61 @@ const addUser = async (req, res, next) => {
 
 
 
+// login request
+
+const loginUser = async(req,res,next)=>{
+  const {email,password}=req.body;
+
+  let existingUser ;
+  
+  try{
+    existingUser = User.findOne({email:email});
+  }catch(err){
+    console.log(err.message);
+    res.status(500).json({error : "Login in failed,please try again later"});
+    return;
+  }
+
+  //user not found
+  if(!existingUser){
+    console.log("User with this email doesn't exist");
+    res.status(401).json({error: "No user exists with this email,please signup"});
+    return;
+  }
+
+  //User found then hash password
+  async function checkPassword(){
+const isMatching = await new Promise((resolve,reject)=>{
+  bcrypt.compare(password,existingUser.password,(error,isMatch)=>{
+    if(error)
+    reject(error);
+  resolve(isMatch);
+
+  });
+});
+return isMatching;
+  }
+
+  const isPasswordMatching = await checkPassword();
+  console.log(isPasswordMatching);
+
+  //Wrong password
+  if(!isPasswordMatching){
+    console.log("Wrong Password");
+    res.status(401).json({error : "Wrong Password, Please enter the correct Password"});
+   
+  }
+  else{
+    console.log("User found");
+    console.log(existingUser);
+    res.status(201).json({
+      message : "Logged in!",
+      user: existingUser,
+    });
+  }
+
+};
+
+
+
+exports.login = loginUser;
