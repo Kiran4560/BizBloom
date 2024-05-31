@@ -13,6 +13,16 @@ const port = 5000;
 // const dbName = 'mongodb://localhost:27017/BizBloom';
 // mongoose.connect(dbName, { useNewUrlParser: true, useUnifiedTopology: true });
 
+//middleware
+app.use(express.json());
+
+//extracting routers
+const userRouters = require("./routers/user.routers");
+
+// for parsering json file
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
 
 //setting the server port
 const mongoose = require('mongoose');
@@ -28,8 +38,21 @@ mongoose.connect(dbName, {  })
     console.error('Error connecting to MongoDB:', err.message);
   });
 
+  //adding a middleware for setting headers in api requests for allowing its execution to from another server when using browsers
+  app.use((req, res, next) => {
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+	next();
+});
+
+
+//setting api
+app.use("/api/user", userRouters);
+
 app.listen(port, () => {
     console.log(
-      `Node Server Running In ${dbName} ModeOn Port ${port}`
+      `Node Server Running on Port ${port}`
     );
   });
