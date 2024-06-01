@@ -1,6 +1,9 @@
 //import express
 const express = require("express");
 const colors = require("colors");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 const port = 5000;
@@ -24,15 +27,13 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 
-//setting the server port
-const mongoose = require('mongoose');
 
-// Use IPv4 address to avoid potential IPv6 issues
-const dbName = 'mongodb://127.0.0.1:27017/BizBloom';
+// Use environment variable for MongoDB URL
+const dbName = process.env.DB;
 
-mongoose.connect(dbName, {  })
+const connect_db=mongoose.connect(dbName,{})
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB ");
   })
   .catch((err) => {
     console.error('Error connecting to MongoDB:', err.message);
