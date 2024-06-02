@@ -91,7 +91,7 @@ const User = require("../models/user");
 // Signup function
 const addUser = async (req, res) => {
   // Destructuring and storing requested data
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
   // Finding existing user with same email
   try {
@@ -107,7 +107,7 @@ const addUser = async (req, res) => {
 
   // Finding existing user with same username
   try {
-    const existingUserName = await User.findOne({ username: name });
+    const existingUserName = await User.findOne({ username: username });
     if (existingUserName) {
       console.log("A user with this username already exists");
       return res.status(422).json({ error: "A user with this username already exists" });
@@ -129,8 +129,8 @@ const addUser = async (req, res) => {
 
   // Creating newUser object
   const newUser = new User({
-    username: name,
-    email,
+    username: username,
+    email: email,
     password: hashedPassword,
     favourites: [],
     markets: [],
@@ -169,6 +169,7 @@ const loginUser = async (req, res) => {
     }
 
     // If login is successful, respond with the user data
+    console.log("user found",user);
     return res.status(200).json({ user });
   } catch (err) {
     console.error(err.message);
