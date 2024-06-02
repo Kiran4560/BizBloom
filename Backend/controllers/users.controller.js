@@ -1,62 +1,133 @@
+// const bcrypt = require("bcryptjs");
+// const User = require("../models/user");
+
+// //signup function
+
+// const addUser = async (req, res) => {
+//   //destructuring and storing requested data
+//   const { name, email, password } = req.body;
+
+//   //finding existing user with same email;
+//   let existingUserEmail;
+//   try {
+//     existingUserEmail = await User.findOne({ email: email });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({ error: err.message });
+    
+//   }
+  
+
+//   //checking existing userEmail
+//   if (existingUserEmail) {
+//     console.log("A user with this email already exists");
+//     console.log(existingUserEmail);
+//     res.status(422).json({ error: "A user with this email already exists" });
+//     return;
+    
+//   }
+
+//   //finding existing user with same username;
+//   let existingUserName;
+//   try {
+//     existingUserName = await User.findOne({ username: name });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({ error: err.message });
+//   }
+
+//   //checking existing username
+//   if (existingUserName) {
+//     console.log("A user with this username already exists");
+//     console.log(existingUserName);
+//     res.status(422).json({ error: "A user with this username already exists" });
+//     return;
+//   } 
+
+  
+//   async function hashPassword() {
+//     const saltRounds = 10; // Defines the number of salt rounds
+
+//     const hashedPassword = await new Promise((resolve, reject) => {
+//       bcrypt.hash(password, saltRounds, function (err, hash) {
+//         if (err) reject(err);
+//         resolve(hash);
+//       });
+//     });
+
+//     return hashedPassword;
+//   }
+
+//   const hashedPassword = await hashPassword();
+
+//   //creating newUser object
+//   const newUser = new User({
+//     username: name,
+//     email,
+//     password: hashedPassword,
+//     favourites: [],
+//     markets: [],
+//   });
+
+//   //add newUser to database
+//   try {
+//     await newUser.save();
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({ error: err.message });
+//   }
+
+//   console.log("User added");
+//   console.log(newUser);
+//   //resending data with 'OK' status code
+//   // res.status(201).json({ user: newUser });
+//   // return;
+
+ 
+// };
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
-//signup function
-
-const addUser = async (req, res, next) => {
-  //destructuring and storing requested data
+// Signup function
+const addUser = async (req, res) => {
+  // Destructuring and storing requested data
   const { name, email, password } = req.body;
 
-  //finding existing user with same email;
-  let existingUserEmail;
+  // Finding existing user with same email
   try {
-    existingUserEmail = await User.findOne({ email: email });
+    const existingUserEmail = await User.findOne({ email: email });
+    if (existingUserEmail) {
+      console.log("A user with this email already exists");
+      return res.status(422).json({ error: "A user with this email already exists" });
+    }
   } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ error: err.message });
-  }
-  
-
-  //checking existing userEmail
-  if (existingUserEmail) {
-    console.log("A user with this email already exists");
-    console.log(existingUserEmail);
-    res.status(422).json({ error: "A user with this email already exists" });
+    console.error(err.message);
+    return res.status(500).json({ error: err.message });
   }
 
-  //finding existing user with same username;
-  let existingUserName;
+  // Finding existing user with same username
   try {
-    existingUserName = await User.findOne({ username: name });
+    const existingUserName = await User.findOne({ username: name });
+    if (existingUserName) {
+      console.log("A user with this username already exists");
+      return res.status(422).json({ error: "A user with this username already exists" });
+    }
   } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ error: err.message });
+    console.error(err.message);
+    return res.status(500).json({ error: err.message });
   }
 
-  //checking existing username
-  if (existingUserName) {
-    console.log("A user with this username already exists");
-    console.log(existingUserName);
-    res.status(422).json({ error: "A user with this username already exists" });
-  } 
-
-  
-  async function hashPassword() {
+  // Hashing the password
+  let hashedPassword;
+  try {
     const saltRounds = 10; // Defines the number of salt rounds
-
-    const hashedPassword = await new Promise((resolve, reject) => {
-      bcrypt.hash(password, saltRounds, function (err, hash) {
-        if (err) reject(err);
-        resolve(hash);
-      });
-    });
-
-    return hashedPassword;
+    hashedPassword = await bcrypt.hash(password, saltRounds);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ error: "Failed to hash the password" });
   }
 
-  const hashedPassword = await hashPassword();
-
-  //creating newUser object
+  // Creating newUser object
   const newUser = new User({
     username: name,
     email,
@@ -65,77 +136,98 @@ const addUser = async (req, res, next) => {
     markets: [],
   });
 
-  //add newUser to database
+  // Adding newUser to database
   try {
     await newUser.save();
+    console.log("User added");
+    console.log(newUser);
+    return res.status(201).json({ user: newUser });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ error: err.message });
+    console.error(err.message);
+    return res.status(500).json({ error: err.message });
   }
-
-  console.log("User added");
-  console.log(newUser);
-  //resending data with 'OK' status code
-  res.status(201).json({ user: newUser });
- 
 };
 
 
 
 // login request
 
-const loginUser = async(req,res,next)=>{
-  const {email,password}=req.body;
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
 
-  let existingUser ;
-  
-  try{
-    existingUser = User.findOne({email:email});
-  }catch(err){
-    console.log(err.message);
-    res.status(500).json({error : "Login in failed,please try again later"});
-    return;
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the provided password matches the hashed password in the database
+    const isMatching = await bcrypt.compare(password, user.password);
+    if (!isMatching) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    // If login is successful, respond with the user data
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ error: "Server error" });
   }
-
-  //user not found
-  if(!existingUser){
-    console.log("User with this email doesn't exist");
-    res.status(401).json({error: "No user exists with this email,please signup"});
-    return;
-  }
-
-  //User found then hash password
-  async function checkPassword(){
-const isMatching = await new Promise((resolve,reject)=>{
-  bcrypt.compare(password,existingUser.password,(error,isMatch)=>{
-    if(error)
-    reject(error);
-  resolve(isMatch);
-
-  });
-});
-return isMatching;
-  }
-
-  const isPasswordMatching = await checkPassword();
-  console.log(isPasswordMatching);
-
-  //Wrong password
-  if(!isPasswordMatching){
-    console.log("Wrong Password");
-    res.status(401).json({error : "Wrong Password, Please enter the correct Password"});
-   
-  }
-  else{
-    console.log("User found");
-    console.log(existingUser);
-    res.status(201).json({
-      message : "Logged in!",
-      user: existingUser,
-    });
-  }
-
 };
+
+// const loginUser = async(req,res)=>{
+//   const {email,password}=req.body;
+
+//   let existingUser ;
+  
+//   try{
+//     existingUser = User.findOne({email:email});
+//   }catch(err){
+//     console.log(err.message);
+//     res.status(500).json({error : "Login in failed,please try again later"});
+//     return;
+//   }
+
+//   //user not found
+//   if(!existingUser){
+//     console.log("User with this email doesn't exist");
+//     res.status(401).json({error: "No user exists with this email,please signup"});
+//     return;
+//   }
+
+//   //User found then hash password
+// async function checkPassword(){
+// const isMatching = await new Promise((resolve,reject)=>{
+//   bcrypt.compare(password,existingUser.password,(error,isMatch)=>{
+//     if(error)
+//     reject(error);
+//   resolve(isMatch);
+
+//   });
+// });
+// return isMatching;
+//   }
+
+//   const isPasswordMatching = await checkPassword();
+//   console.log(isPasswordMatching);
+
+//   //Wrong password
+//   if(!isPasswordMatching){
+//     console.log("Wrong Password");
+//     res.status(401).json({error : "Wrong Password, Please enter the correct Password"});
+   
+//   }
+//   else{
+//     console.log("User found");
+//     console.log(existingUser);
+//     res.status(201).json({
+//       message : "Logged in!",
+//       user: existingUser,
+//     });
+//   }
+
+// };
 
 
 exports.signup = addUser;
