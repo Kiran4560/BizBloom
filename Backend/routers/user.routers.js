@@ -7,5 +7,6 @@ const userController= require("../controllers/users.controller");
 //setting apis
 router.post("/signup",userController.signup);
 router.post("/login",userController.login);
+router.post("/togglefav", userController.toggleAddFavMarket);
 
 module.exports = router ;
