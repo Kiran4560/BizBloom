@@ -1,10 +1,12 @@
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mailSender = require("../utils/mailSender");
 const User = require("../models/user");
 
+//===========================================signup-function=================================================================
 // Signup function
-const addUser = async (req, res) => {
+const signup = async (req, res) => {
   // Destructuring and storing requested data
   const { username, email, password } = req.body;
 
@@ -64,7 +66,7 @@ const addUser = async (req, res) => {
   }
 };
 
-
+//===========================================login function======================================================================
 
 // login request
 
@@ -94,6 +96,8 @@ const loginUser = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+//=======================================togglefavmarket-function================================================================
 
 //add and remove fav market
 const toggleAddFavMarket = async (req, res) => {
@@ -146,7 +150,84 @@ const toggleAddFavMarket = async (req, res) => {
   }
 };
 
+//==============================================forget-password==================================================================
+
+//forget-password function
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Generate a reset token (JWT)
+    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Send email with the reset token
+    const resetUrl = `http://localhost:5000/reset-password?token=${resetToken}`;
+    const emailBody = `
+      <h2>Password Reset Request</h2>
+      <p>You requested a password reset. Please use the following link to reset your password:</p>
+      <a href="${resetUrl}">Reset Password</a>
+      <p>If you did not request this, please ignore this email.</p>
+    `;
+
+    await mailSender(user.email, "Password Reset Request", emailBody);
+
+    res.status(200).json({ message: "Password reset email sent" });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+//========================================Reset-password funtion===================================================================================
+
+const resetPassword = async (req, res) => {
+  const { resetToken, newPassword } = req.body;
+
+  try {
+    // Hash the received token
+    const hashedResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    // Find user by reset token and ensure token is not expired
+    const user = await User.findOne({
+      passwordResetToken: hashedResetToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+
+    // Hash the new password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Update user's password and clear reset token and expiration
+    user.password = hashedPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 
 exports.toggleAddFavMarket = toggleAddFavMarket;
-exports.signup = addUser;
+exports.signup = signup;
 exports.login = loginUser;
+exports.forgetpassword = forgotPassword;
+exports.resetPassword = resetPassword;

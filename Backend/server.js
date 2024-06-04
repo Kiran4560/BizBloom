@@ -12,7 +12,7 @@ const marketRouters = require("./routers/market.routers");
 dotenv.config();
 
 const app = express();
-const port = 5000;
+const port =process.env.PORT || 4000;;
 
 //middleware
 app.use(express.json());
