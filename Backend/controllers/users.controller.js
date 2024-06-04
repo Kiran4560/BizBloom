@@ -1,5 +1,6 @@
 
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 // Signup function
@@ -53,9 +54,10 @@ const addUser = async (req, res) => {
   // Adding newUser to database
   try {
     await newUser.save();
+   // req.session.userId = newUser._id; // Store user ID in session
     console.log("User added");
     console.log(newUser);
-    return res.status(201).json({ user: newUser });
+    return res.status(201).json({ user: newUser});
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ error: err.message });
@@ -82,9 +84,11 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    // If login is successful, respond with the user data
-    console.log("user found",user);
-    return res.status(200).json({ user });
+    // Store userId in session
+    //req.session.userId = user._id;
+
+    
+    res.status(200).json({ message: "Login successful" });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ error: "Server error" });

@@ -47,7 +47,9 @@ const marketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ownerId: { type: String, required: true },
+  ownerId: { type: mongoose.Schema.Types.ObjectId, 
+    ref: "User"
+   }
 });
 
 //exporting Market modal

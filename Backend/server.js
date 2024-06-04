@@ -3,24 +3,20 @@ const express = require("express");
 const colors = require("colors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
+//extracting routers
+const userRouters = require("./routers/user.routers");
+const marketRouters = require("./routers/market.routers");
 dotenv.config();
 
 const app = express();
 const port = 5000;
 
-//connecting to the databse server
-// const mongoose = require("mongoose");
-// const dbName = "BizBloom";
-// mongoose.connect(`mongodb://localhost:27017/${dbName}`);
-// const mongoose = require('mongoose');
-// const dbName = 'mongodb://localhost:27017/BizBloom';
-// mongoose.connect(dbName, { useNewUrlParser: true, useUnifiedTopology: true });
-
 //middleware
 app.use(express.json());
 
-//extracting routers
-const userRouters = require("./routers/user.routers");
 
 // for parsering json file
 const bodyParser = require("body-parser");
@@ -31,6 +27,21 @@ app.use(bodyParser.json());
 // Use environment variable for MongoDB URL
 const dbName = process.env.DB;
 
+// Create a store for sessions
+const store = new MongoDBStore({
+  uri: dbName,
+  collection: 'sessions'
+});
+
+// Set up session middleware
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  store: store
+}));
+
+//database connection
 const connect_db=mongoose.connect(dbName,{})
   .then(() => {
     console.log("Connected to MongoDB ");
@@ -51,6 +62,7 @@ const connect_db=mongoose.connect(dbName,{})
 
 //setting api
 app.use("/api/user", userRouters);
+app.use("/api/market",marketRouters);
 
 app.listen(port, () => {
     console.log(

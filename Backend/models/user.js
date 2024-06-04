@@ -26,9 +26,9 @@ const userSchema = new mongoose.Schema({
   ],
   markets: [
     {
-      type: String,
-    },
-  ],
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'Market'
+    }]
 });
 
 //exporting User modal
