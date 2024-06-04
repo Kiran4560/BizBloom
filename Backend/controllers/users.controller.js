@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const mailSender = require("../utils/mailSender");
 const User = require("../models/user");
 
-//===========================================signup-function=================================================================
+//===========================================SIGNUP-FUNCTION=================================================================
 // Signup function
 const signup = async (req, res) => {
   // Destructuring and storing requested data
@@ -66,7 +66,7 @@ const signup = async (req, res) => {
   }
 };
 
-//===========================================login function======================================================================
+//===========================================LOGIN-FUNCTION======================================================================
 
 // login request
 
@@ -97,7 +97,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-//=======================================togglefavmarket-function================================================================
+//=======================================TOGGL_FAV_MARKET-FUNCTION================================================================
 
 //add and remove fav market
 const toggleAddFavMarket = async (req, res) => {
@@ -150,7 +150,7 @@ const toggleAddFavMarket = async (req, res) => {
   }
 };
 
-//==============================================forget-password==================================================================
+//==============================================FORGET-PASSWORD==================================================================
 
 //forget-password function
 
@@ -187,7 +187,7 @@ const forgotPassword = async (req, res) => {
 
 
 
-//========================================Reset-password funtion===================================================================================
+//========================================RESET_PASSWORD-FUNCTION===================================================================================
 
 const resetPassword = async (req, res) => {
   const { resetToken, newPassword } = req.body;
