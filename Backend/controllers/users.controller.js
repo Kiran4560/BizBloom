@@ -1,6 +1,7 @@
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const mailSender = require("../utils/mailSender");
 const User = require("../models/user");
 
@@ -177,7 +178,7 @@ const forgotPassword = async (req, res) => {
     `;
 
     await mailSender(user.email, "Password Reset Request", emailBody);
-
+    console.log("token-->",resetToken);
     res.status(200).json({ message: "Password reset email sent" });
   } catch (err) {
     console.error(err.message);
@@ -190,33 +191,31 @@ const forgotPassword = async (req, res) => {
 //========================================RESET_PASSWORD-FUNCTION===================================================================================
 
 const resetPassword = async (req, res) => {
-  const { resetToken, newPassword } = req.body;
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(400).json({ error: "Token and new password are required" });
+  }
 
   try {
-    // Hash the received token
-    const hashedResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    // Verify the JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
 
-    // Find user by reset token and ensure token is not expired
-    const user = await User.findOne({
-      passwordResetToken: hashedResetToken,
-      passwordResetExpires: { $gt: Date.now() },
-    });
-
+    // Find user by ID
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(400).json({ error: "Invalid or expired token" });
+      return res.status(400).json({ error: "Invalid token or user not found" });
     }
 
     // Hash the new password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update user's password and clear reset token and expiration
+    // Update user's password
     user.password = hashedPassword;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-
     await user.save();
-
+    console.log(hashedPassword);
     res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
     console.error(err.message);
@@ -226,8 +225,9 @@ const resetPassword = async (req, res) => {
 
 
 
+
 exports.toggleAddFavMarket = toggleAddFavMarket;
 exports.signup = signup;
 exports.login = loginUser;
 exports.forgetpassword = forgotPassword;
-exports.resetPassword = resetPassword;
+exports.resetpassword = resetPassword;

@@ -1,9 +1,10 @@
 //import express
 const express = require("express");
-const colors = require("colors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const cors = require("cors");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 //extracting routers
@@ -16,6 +17,14 @@ const port =process.env.PORT || 4000;;
 
 //middleware
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+	cors({
+		origin:"http://localhost:3000",
+		credentials:true,
+	})
+)
+
 
 
 // for parsering json file
@@ -63,6 +72,15 @@ const connect_db=mongoose.connect(dbName,{})
 //setting api
 app.use("/api/user", userRouters);
 app.use("/api/market",marketRouters);
+
+
+//default route
+app.get("/", (req, res) => {
+	return res.json({
+		success:true,
+		message:'Your server is up and running....'
+	});
+});
 
 app.listen(port, () => {
     console.log(

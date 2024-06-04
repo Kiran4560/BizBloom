@@ -10,7 +10,7 @@ router.post("/login",userController.login);
 router.post("/togglefav", userController.toggleAddFavMarket);
 
 //password forgot apis
-router.post("/forgetpassword",userController.forgetpassword);
-router.post("/resetpassword",userController.resetPassword);
+router.post("/forget-password",userController.forgetpassword);
+router.post("/reset-password",userController.resetpassword);
 
 module.exports = router ;
