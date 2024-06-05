@@ -11,10 +11,14 @@ const signup = async (req, res) => {
   // Destructuring and storing requested data
   const { username, email, password } = req.body;
 
-  // Finding existing user with same email
-  if(!username || !email || !password)
-  return res.status(404).json({error:"Please enter fields"});
+ 
+//validation
   try {
+
+  if(!username || !email || !password)
+  return res.status(404).json({error:"Please enter all the required fields"});
+
+  // Finding existing user with same email
     const existingUserEmail = await User.findOne({ email: email });
     if (existingUserEmail) {
       console.log("A user with this email already exists");
@@ -74,12 +78,21 @@ const signup = async (req, res) => {
 // login request
 
 const loginUser = async (req, res) => {
+  try{
   const { email, password } = req.body;
 
-  try {
+  //valodation
+  if(!email || !password){
+    return res.status(404).send({
+      success:false,
+      message:"Invalid email or password"
+    })
+  }
+  
     // Find the user by email
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ error: "User not found" });
     }
 
@@ -89,14 +102,30 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    // Store userId in session
-    //req.session.userId = user._id;
+    //create token
+    const token =  jwt.sign({_id:user._id},process.env.JWT_SECRET_KEY, {
+      expiresIn:'3d'
+    });
 
-    
-    res.status(200).json({ message: "Login successful" });
+    console.log("User login successful",user);
+    res.status(200).send({
+      success:true, 
+      message: "Login successfully",
+    user:{
+      name:user.name,
+      email:user.email,
+      phone:user.phone,
+      address:user.address,
+    },
+   token
+});
   } catch (err) {
     console.error(err.message);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).send({
+        success:false,
+        message:"Error in login",
+        err,
+       });
   }
 };
 

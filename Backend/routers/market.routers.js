@@ -1,11 +1,9 @@
-//extracting router method from express module
 const express = require("express");
 const router = express.Router();
+const requireSignIn = require("../middlewares/authMiddleware");
+const marketController = require("../controllers/markets.controller");
 
+// Setting APIs 
+router.post("/addMarket", requireSignIn, marketController.addMarket); // Protect this route
 
-const marketController= require("../controllers/markets.controller");
-
-
-//setting apis 
-router.post("/addMarket",marketController.addMarket);
-module.exports = router ;
+module.exports = router;
