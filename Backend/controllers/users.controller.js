@@ -12,6 +12,8 @@ const signup = async (req, res) => {
   const { username, email, password } = req.body;
 
   // Finding existing user with same email
+  if(!username || !email || !password)
+  return res.status(404).json({error:"Please enter fields"});
   try {
     const existingUserEmail = await User.findOne({ email: email });
     if (existingUserEmail) {
