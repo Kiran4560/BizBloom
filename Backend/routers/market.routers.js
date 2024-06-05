@@ -5,5 +5,6 @@ const marketController = require("../controllers/markets.controller");
 
 // Setting APIs 
 router.post("/addMarket", requireSignIn, marketController.addMarket); // Protect this route
+router.delete("/delete-market/:marketId",requireSignIn,marketController.deleteMarket);
 
 module.exports = router;
