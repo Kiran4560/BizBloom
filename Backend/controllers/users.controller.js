@@ -197,7 +197,7 @@ const forgotPassword = async (req, res) => {
     }
 
     // Generate a reset token (JWT)
-    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
     // Send email with the reset token
     const resetUrl = `http://localhost:5000/reset-password?token=${resetToken}`;
@@ -230,7 +230,7 @@ const resetPassword = async (req, res) => {
 
   try {
     // Verify the JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     const userId = decoded.userId;
 
     // Find user by ID
