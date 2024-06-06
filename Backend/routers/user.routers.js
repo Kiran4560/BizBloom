@@ -1,7 +1,6 @@
 //extracting router method from express module
 const express = require("express");
 const router = express.Router();
-const requireSignIn = require("../middlewares/authMiddleware");
 const userController= require("../controllers/users.controller");
 
 //user apis

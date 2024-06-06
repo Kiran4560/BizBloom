@@ -50,6 +50,7 @@ app.use("/api/user", userRouters);
 app.use("/api/market",marketRouters);
 
 
+
 //default route
 app.get("/", (req, res) => {
 	return res.json({
