@@ -30,7 +30,9 @@ const marketSchema = new mongoose.Schema({
     lat: { type: Number },
     lng: { type: Number },
   },
-  description: { type: String },
+  description: { 
+    type: String 
+  },
   rating: {
     type: Number,
   },
@@ -47,7 +49,8 @@ const marketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ownerId: { type: mongoose.Schema.Types.ObjectId, 
+  ownerId: { 
+    type: mongoose.Schema.Types.ObjectId, 
     ref: "User"
    }
 });
