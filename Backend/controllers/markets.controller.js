@@ -77,7 +77,7 @@ const deleteMarket = async (req, res) => {
         console.log("Market not found or user not authorized");
         return res.status(404).json({ error: "Market not found or user not authorized" });
       }
-  
+      
       // Delete the market
       await Market.deleteOne({ _id: marketId });
   
