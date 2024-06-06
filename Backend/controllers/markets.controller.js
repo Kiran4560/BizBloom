@@ -103,9 +103,7 @@ const deleteMarket = async (req, res) => {
     const user = await User.findOne({ _id: ownerId });
 
     console.log("Market deleted");
-    return res
-      .status(200)
-      .json({ message: "Market deleted successfully", user: user });
+    return res.status(200).json({ message: "Market deleted successfully", user: user });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ error: err.message });
@@ -130,9 +128,7 @@ const updateMarket = async (req, res) => {
   // Check if the ownerId of the market matches the authenticated user's ID
   if (market.ownerId.toString() !== ownerId) {
     console.log("User not authorized to update this market");
-    return res
-      .status(403)
-      .json({ error: "User not authorized to update this market" });
+    return res.status(403).json({ error: "User not authorized to update this market" });
   }
 
   // Extract the fields from the request body
@@ -147,9 +143,7 @@ const updateMarket = async (req, res) => {
 
     console.log("Market updated Successfully", updatedMarket);
 
-    return res
-      .status(200)
-      .json({ message: "Market updated successfully", market: updatedMarket });
+    return res.status(200).json({ message: "Market updated successfully", market: updatedMarket });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ error: err.message });
