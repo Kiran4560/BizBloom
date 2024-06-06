@@ -187,7 +187,7 @@ const getUserMarket = async(req,res)=>{
          let allMarkets;
 
         try{
-         // Get all markets of user
+         // Get all Markets of user
          allMarkets = await Market.find({ownerId:ownerId});
          console.log("User market data fetched successfully");
         }catch(err){
