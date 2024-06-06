@@ -257,6 +257,7 @@ const resetPassword = async (req, res) => {
 
 
 
+
 exports.toggleAddFavMarket = toggleAddFavMarket;
 exports.signup = signup;
 exports.login = loginUser;
