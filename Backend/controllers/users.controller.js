@@ -1,4 +1,3 @@
-
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -11,18 +10,20 @@ const signup = async (req, res) => {
   // Destructuring and storing requested data
   const { username, email, password } = req.body;
 
- 
-//validation
+  //validation
   try {
+    if (!username || !email || !password)
+      return res
+        .status(404)
+        .json({ error: "Please enter all the required fields" });
 
-  if(!username || !email || !password)
-  return res.status(404).json({error:"Please enter all the required fields"});
-
-  // Finding existing user with same email
+    // Finding existing user with same email
     const existingUserEmail = await User.findOne({ email: email });
     if (existingUserEmail) {
       console.log("A user with this email already exists");
-      return res.status(422).json({ error: "A user with this email already exists" });
+      return res
+        .status(422)
+        .json({ error: "A user with this email already exists" });
     }
   } catch (err) {
     console.error(err.message);
@@ -34,7 +35,9 @@ const signup = async (req, res) => {
     const existingUserName = await User.findOne({ username: username });
     if (existingUserName) {
       console.log("A user with this username already exists");
-      return res.status(422).json({ error: "A user with this username already exists" });
+      return res
+        .status(422)
+        .json({ error: "A user with this username already exists" });
     }
   } catch (err) {
     console.error(err.message);
@@ -63,10 +66,10 @@ const signup = async (req, res) => {
   // Adding newUser to database
   try {
     await newUser.save();
-   // req.session.userId = newUser._id; // Store user ID in session
+    // req.session.userId = newUser._id; // Store user ID in session
     console.log("User added");
     console.log(newUser);
-    return res.status(201).json({ user: newUser});
+    return res.status(201).json({ user: newUser });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ error: err.message });
@@ -78,17 +81,17 @@ const signup = async (req, res) => {
 // login request
 
 const loginUser = async (req, res) => {
-  try{
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  //valodation
-  if(!email || !password){
-    return res.status(404).send({
-      success:false,
-      message:"Invalid email or password"
-    })
-  }
-  
+    //valodation
+    if (!email || !password) {
+      return res.status(404).send({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
@@ -103,29 +106,29 @@ const loginUser = async (req, res) => {
     }
 
     //create token
-    const token =  jwt.sign({_id:user._id},process.env.JWT_SECRET_KEY, {
-      expiresIn:'3d'
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "3d",
     });
 
-    console.log("User login successful",user);
+    console.log("User login successful", user);
     res.status(200).send({
-      success:true, 
+      success: true,
       message: "Login successfully",
-    user:{
-      name:user.name,
-      email:user.email,
-      phone:user.phone,
-      address:user.address,
-    },
-   token
-});
+      user: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+      },
+      token,
+    });
   } catch (err) {
     console.error(err.message);
     return res.status(500).send({
-        success:false,
-        message:"Error in login",
-        err,
-       });
+      success: false,
+      message: "Error in login",
+      err,
+    });
   }
 };
 
@@ -160,7 +163,9 @@ const toggleAddFavMarket = async (req, res) => {
         );
         res.status(201).json({ message: "Removed from fav" });
       } catch (updateError) {
-        console.error(`Error removing market from favorites: ${updateError.message}`);
+        console.error(
+          `Error removing market from favorites: ${updateError.message}`
+        );
         res.status(500).json({ error: updateError.message });
       }
     } else {
@@ -172,7 +177,9 @@ const toggleAddFavMarket = async (req, res) => {
         );
         res.status(201).json({ message: "Added to fav" });
       } catch (updateError) {
-        console.error(`Error adding market to favorites: ${updateError.message}`);
+        console.error(
+          `Error adding market to favorites: ${updateError.message}`
+        );
         res.status(500).json({ error: updateError.message });
       }
     }
@@ -197,7 +204,11 @@ const forgotPassword = async (req, res) => {
     }
 
     // Generate a reset token (JWT)
-    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+    const resetToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
 
     // Send email with the reset token
     const resetUrl = `http://localhost:5000/reset-password?token=${resetToken}`;
@@ -209,7 +220,7 @@ const forgotPassword = async (req, res) => {
     `;
 
     await mailSender(user.email, "Password Reset Request", emailBody);
-    console.log("token-->",resetToken);
+    console.log("token-->", resetToken);
     res.status(200).json({ message: "Password reset email sent" });
   } catch (err) {
     console.error(err.message);
@@ -217,15 +228,15 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-
-
 //========================================RESET_PASSWORD-FUNCTION===================================================================================
 
 const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
   if (!token || !newPassword) {
-    return res.status(400).json({ error: "Token and new password are required" });
+    return res
+      .status(400)
+      .json({ error: "Token and new password are required" });
   }
 
   try {
@@ -253,10 +264,6 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
-
-
-
-
 
 exports.toggleAddFavMarket = toggleAddFavMarket;
 exports.signup = signup;
