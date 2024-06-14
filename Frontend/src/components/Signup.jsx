@@ -1,17 +1,27 @@
 import React, { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../store/authSlice';
+import authService from '../services/authService';
 
 export default function Signup() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [error, setError] = useState('');
+    const { register, handleSubmit } = useForm();
 
-    const loginHandler = () => {
-
-    }
-
-    const createNewAccountHandler = (e) => {
-        e.preventDefault();
+    const signupHandler = async (data) => {
+        try {
+            const userData = await authService.createUser(data);
+            if (userData) {
+                console.log(data);
+                dispatch(login(data))
+            }
+        } catch (error) {
+            setError(error)
+        }
     }
 
     return (
@@ -39,13 +49,13 @@ export default function Signup() {
                     <p className="mt-2 text-center text-sm text-gray-400">
                         Already have an account?{' '}
                         <button
-                            onClick={loginHandler}
+                            onClick={() => navigate('/login')}
                             className="font-bold transition-all duration-200 hover:underline"
                         >
                             Log In
                         </button>
                     </p>
-                    <form onSubmit={createNewAccountHandler} action="#" method="POST" className="mt-8">
+                    <form onSubmit={handleSubmit(signupHandler)} className="mt-8">
                         <div className="space-y-5">
                             <div>
                                 <label htmlFor="name" className="text-base font-medium">
@@ -58,8 +68,9 @@ export default function Signup() {
                                         type="text"
                                         placeholder="Full Name"
                                         id="name"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        {...register('username', {
+                                            required: true
+                                        })}
                                     ></input>
                                 </div>
                             </div>
@@ -74,8 +85,12 @@ export default function Signup() {
                                         type="email"
                                         placeholder="Email"
                                         id="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        {...register('email', {
+                                            required: true,
+                                            validate: {
+                                                matchPattern: (value) => /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/.test(value) || "Email address must be a valid address"
+                                            }
+                                        })}
                                     ></input>
                                 </div>
                             </div>
@@ -92,8 +107,9 @@ export default function Signup() {
                                         type="password"
                                         placeholder="Password"
                                         id="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        {...register('password', {
+                                            required: true
+                                        })}
                                     ></input>
                                 </div>
                             </div>

@@ -1,23 +1,33 @@
 import React, { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import authService from "../services/authService"
+import { useDispatch } from "react-redux"
+import { login } from '../store/authSlice';
 
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { register, handleSubmit } = useForm();
+    const [error, setError] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const forgotPasswordHandler = () => {
 
     }
 
-    const createNewAccountHandler = () => {
-
-    }
-
-    const loginHandler = (e) => {
-        e.preventDefault();
-
-        // useNavigate()
+    const loginHandler = async (data) => {
+        try {
+            const userData = await authService.loginUser(data);
+            if (userData) {
+                console.log(userData);
+                dispatch(login({ userData: data, isLoggedIn: true }));
+                navigate('/');
+            }
+            setError('');
+        } catch (error) {
+            setError(error);
+        }
     }
 
     return (
@@ -45,13 +55,13 @@ export default function Login() {
                     <p className="mt-2 text-center text-sm text-gray-400 ">
                         Don&apos;t have an account?{' '}
                         <button
-                            onClick={createNewAccountHandler}
+                            onClick={() => navigate('/signup')}
                             className="font-bold transition-all duration-200 hover:underline"
                         >
                             Create a free account
                         </button>
                     </p>
-                    <form onSubmit={loginHandler} action="#" method="POST" className="mt-8">
+                    <form onSubmit={handleSubmit(loginHandler)} className="mt-8">
                         <div className="space-y-5">
                             {/* Email Address InputBox */}
                             <div>
@@ -65,8 +75,12 @@ export default function Login() {
                                         type="email"
                                         placeholder="Email"
                                         id='email'
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        {...register('email', {
+                                            required: true,
+                                            validate: {
+                                                matchPattern: (value) => /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/.test(value) || "Email address must be a valid address"
+                                            }
+                                        })}
                                     ></input>
                                 </div>
                             </div>
@@ -88,8 +102,9 @@ export default function Login() {
                                         type="password"
                                         placeholder="Password"
                                         id='password'
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        {...register('password', {
+                                            required: true
+                                        })}
                                     ></input>
                                 </div>
                             </div>

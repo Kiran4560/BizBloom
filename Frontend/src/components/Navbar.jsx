@@ -1,7 +1,8 @@
 import React from 'react'
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice';
 
 
 export default function Navbar() {
@@ -19,7 +20,15 @@ export default function Navbar() {
     //         href: '#',
     //     },
     // ]
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+
+    const logoutHandler = () => {
+        dispatch(logout());
+        navigate('/');
+    }
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -44,7 +53,9 @@ export default function Navbar() {
                             />
                         </svg> */}
                     </span>
-                    <span className="font-bold">BizBloom</span>
+                    <span className="font-bold">
+                        <Link to='/'>BizBloom</Link>
+                    </span>
                 </div>
                 {/* Routes options mapping */}
                 {/* <div className="hidden grow items-start lg:flex">
@@ -65,18 +76,42 @@ export default function Navbar() {
                     </ul>
                 </div> */}
                 <div className="hidden space-x-2 lg:block">
-                    <button
-                        type="button"
-                        className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                        Sign Up
-                    </button>
-                    <button
-                        type="button"
-                        className="rounded-md border border-black px-3 py-2 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                        Log In
-                    </button>
+                    {isLoggedIn ? (
+                        <>
+                            <button
+                                type="button"
+                                className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                onClick={() => navigate('/signup')}
+                            >
+                                Sign Up
+                            </button>
+                            <button
+                                type="button"
+                                className="rounded-md border border-black px-3 py-2 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                onClick={() => navigate('/login')}
+                            >
+                                Log In
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                onClick={() => navigate('/signup')}
+                            >
+                                Market Profile
+                            </button>
+                            <button
+                                type="button"
+                                className="rounded-md border border-black px-3 py-2 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                onClick={logoutHandler}
+                            >
+                                Log Out
+                            </button>
+                        </>
+                    )}
+
                 </div>
                 <div className="lg:hidden">
                     <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />

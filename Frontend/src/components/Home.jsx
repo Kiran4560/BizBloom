@@ -1,9 +1,11 @@
 import React from 'react'
+import { About, Features } from "./index"
 
 function Home() {
     return (
         <>
-            test
+            <Features />
+            <About />
         </>
     )
 }
