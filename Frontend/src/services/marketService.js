@@ -1,5 +1,5 @@
 import axios from "axios";
-import { deleteMarket } from "../../../Backend/controllers/markets.controller";
+// import { deleteMarket } from "../../../Backend/controllers/markets.controller";
 
 /**************  /api/market/ ******************/
 export class MarketService {
@@ -100,7 +100,7 @@ export class MarketService {
 
   async deleteMarket({ marketId }) {
     try {
-      const res = await axios.delete(`/api/delete-market/${marketId}`);
+      const res = await axios.delete(`/api/market/delete-market/${marketId}`);
       if (res) {
         console.log(res);
         return res.data;

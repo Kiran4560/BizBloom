@@ -23,23 +23,21 @@ export default function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [userData, setUserData] = useState(null)
+
+    const user = useSelector(state => state.auth.userData);
+    const token = useSelector(state => state.auth.userToken);
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        if (user) {
+        if (token)
             setUserData(user);
-        }
-    }, [navigate])
+        else
+            setUserData(null);
+    }, [token, user])
 
 
     const logoutHandler = () => {
         dispatch(logout());
-        // setUserData(null);
-        const user = localStorage.getItem('user');
-        if (!user)
-            setUserData(null);
-
         navigate('/');
     }
 
@@ -111,7 +109,7 @@ export default function Navbar() {
                             <button
                                 type="button"
                                 className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                                onClick={() => navigate('/signup')}
+                                onClick={() => navigate('/myProfile')}
                             >
                                 Market Profile
                             </button>

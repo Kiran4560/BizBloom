@@ -16,8 +16,8 @@ export default function Signup() {
         try {
             const userData = await authService.createUser(data);
             if (userData) {
-                console.log(data);
-                dispatch(login(data))
+                // console.log(data);
+                navigate('/login');
             }
         } catch (error) {
             setError(error)

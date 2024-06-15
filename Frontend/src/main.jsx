@@ -5,7 +5,7 @@ import './index.css'
 import { Provider } from "react-redux"
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Home, Login, Signup } from "./components/index.js"
+import { Home, Login, Signup, MarketProfile } from "./components/index.js"
 
 const router = createBrowserRouter([
   {
@@ -29,6 +29,14 @@ const router = createBrowserRouter([
         element: (
           // <AuthLayout authenticated={false}>
           <Signup />
+          // </AuthLayout>
+        )
+      },
+      {
+        path: '/myProfile',
+        element: (
+          // <AuthLayout authenticated>
+          <MarketProfile />
           // </AuthLayout>
         )
       }
