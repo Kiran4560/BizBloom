@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 /**************  /api/user/ ******************/
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
         password,
       });
       if (res) {
-        console.log(res);
+        console.log(res.data);
         return res.data;
       }
     } catch (error) {

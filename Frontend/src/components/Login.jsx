@@ -20,8 +20,8 @@ export default function Login() {
         try {
             const userData = await authService.loginUser(data);
             if (userData) {
-                console.log(userData);
-                dispatch(login({ userData: data, isLoggedIn: true }));
+                // console.log(userData);
+                dispatch(login({ userData }));
                 navigate('/');
             }
             setError('');

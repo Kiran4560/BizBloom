@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,13 +20,26 @@ export default function Navbar() {
     //         href: '#',
     //     },
     // ]
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [userData, setUserData] = useState(null)
+
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            setUserData(user);
+        }
+    }, [navigate])
+
 
     const logoutHandler = () => {
         dispatch(logout());
+        // setUserData(null);
+        const user = localStorage.getItem('user');
+        if (!user)
+            setUserData(null);
+
         navigate('/');
     }
 
@@ -76,7 +89,7 @@ export default function Navbar() {
                     </ul>
                 </div> */}
                 <div className="hidden space-x-2 lg:block">
-                    {isLoggedIn ? (
+                    {!userData ? (
                         <>
                             <button
                                 type="button"
