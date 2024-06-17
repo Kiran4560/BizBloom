@@ -1,6 +1,11 @@
 import axios from "axios";
 // import { deleteMarket } from "../../../Backend/controllers/markets.controller";
-
+const token = localStorage.getItem("token");
+const configOptions = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 /**************  /api/market/ ******************/
 export class MarketService {
   async createMarket({
@@ -16,18 +21,22 @@ export class MarketService {
     profession,
   }) {
     try {
-      const res = await axios.post("/api/market/addMarket", {
-        title,
-        phonenum,
-        imageURL,
-        address,
-        lat,
-        lng,
-        description,
-        openingTime,
-        closingTime,
-        profession,
-      });
+      const res = await axios.post(
+        "/api/market/addMarket",
+        {
+          title,
+          phonenum,
+          imageURL,
+          address,
+          lat,
+          lng,
+          description,
+          openingTime,
+          closingTime,
+          profession,
+        },
+        configOptions
+      );
       if (res) {
         console.log(res);
         return res.data;
@@ -39,7 +48,7 @@ export class MarketService {
 
   async getAllMarkets() {
     try {
-      const res = await axios.get("/api/market/get-all-market");
+      const res = await axios.get("/api/market/get-all-market", configOptions);
       if (res) {
         console.log(res);
         return res.data;
@@ -51,7 +60,7 @@ export class MarketService {
 
   async getUserMarket() {
     try {
-      const res = await axios.get("/api/market/get-user-market");
+      const res = await axios.get("/api/market/get-user-market", configOptions);
       if (res) {
         console.log(res);
         return res.data;
@@ -77,18 +86,22 @@ export class MarketService {
     }
   ) {
     try {
-      const res = await axios.put(`/api/market/update-market/${marketId}`, {
-        title,
-        phonenum,
-        imageURL,
-        address,
-        lat,
-        lng,
-        description,
-        openingTime,
-        closingTime,
-        profession,
-      });
+      const res = await axios.put(
+        `/api/market/update-market/${marketId}`,
+        {
+          title,
+          phonenum,
+          imageURL,
+          address,
+          lat,
+          lng,
+          description,
+          openingTime,
+          closingTime,
+          profession,
+        },
+        configOptions
+      );
       if (res) {
         console.log(res);
         return res.data;
@@ -100,7 +113,10 @@ export class MarketService {
 
   async deleteMarket({ marketId }) {
     try {
-      const res = await axios.delete(`/api/market/delete-market/${marketId}`);
+      const res = await axios.delete(
+        `/api/market/delete-market/${marketId}`,
+        configOptions
+      );
       if (res) {
         console.log(res);
         return res.data;

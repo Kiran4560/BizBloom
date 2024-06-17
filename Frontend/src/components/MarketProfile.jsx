@@ -30,8 +30,19 @@ function MarketProfile() {
     }, [])
 
     return (
-        <div>
-            test
+        <div className="flex flex-wrap justify-center items-center w-full h-2/3 mt-48">
+            {
+                myMarkets.map(({ location, _id, title, phonenum, imageURL, address, description, rating, reviews, openingTime, closingTime, profession }) => (
+                    <div key={_id} className="max-w-sm rounded overflow-hidden shadow-lg bg-slate-400">
+                        {imageURL && <img className="w-full" src={imageURL} alt={title} />}
+                        <div className="px-6 py-4">
+                            {title && <div className="font-bold text-xl mb-2">{title}</div>}
+                            {description && <div className="font-semibold text-md mb-2 text-gray-600">{description}</div>}
+                            {address && <p className="text-gray-700 text-base">{address}</p>}
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     )
 }
