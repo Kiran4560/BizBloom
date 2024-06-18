@@ -65,7 +65,7 @@ export default function Navbar() {
                         </svg> */}
                     </span>
                     <span className="font-bold">
-                        <Link to='/'>BizBloom</Link>
+                        <Link to={token ? ('/markets') : ('/')}>BizBloom</Link>
                     </span>
                 </div>
                 {/* Routes options mapping */}

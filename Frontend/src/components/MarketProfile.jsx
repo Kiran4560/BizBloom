@@ -30,7 +30,7 @@ function MarketProfile() {
     }, [])
 
     return (
-        <div className="flex flex-wrap justify-center items-center w-full h-2/3 mt-48">
+        <div className="flex flex-wrap justify-center items-center w-full h-2/3 mt-48 space-x-2">
             {
                 myMarkets.map(({ location, _id, title, phonenum, imageURL, address, description, rating, reviews, openingTime, closingTime, profession }) => (
                     <div key={_id} className="max-w-sm rounded overflow-hidden shadow-lg bg-slate-400">

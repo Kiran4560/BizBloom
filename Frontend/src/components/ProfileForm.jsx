@@ -29,10 +29,10 @@ function ProfileForm() {
     const { register, handleSubmit } = useForm({
         title: '',
         phonenum: '',
-        imageURL: '',
+        imageURL: " ",
         address: '',
-        lat: "",
-        lng: "",
+        lat: 0,
+        lng: 0,
         description: "",
         openingTime: '',
         closingTime: '',
@@ -101,7 +101,7 @@ function ProfileForm() {
                     <div>
 
                         <input
-                            type="text"
+                            type="number"
                             placeholder='Enter your Latitude here...'
                             className={inputFieldStyle}
                             {...register('lat')}
@@ -110,7 +110,7 @@ function ProfileForm() {
                     <div>
 
                         <input
-                            type="text"
+                            type="number"
                             placeholder='Enter your Longitude here...'
                             className={inputFieldStyle}
                             {...register('lng')}

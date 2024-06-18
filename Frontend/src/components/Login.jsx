@@ -22,7 +22,7 @@ export default function Login() {
             if (userData) {
                 // console.log(userData);
                 dispatch(login({ userData }));
-                navigate('/');
+                navigate('/markets');
             }
             setError('');
         } catch (error) {
