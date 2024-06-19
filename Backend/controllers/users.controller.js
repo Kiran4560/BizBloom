@@ -110,7 +110,7 @@ const loginUser = async (req, res) => {
       expiresIn: "3d",
     });
 
-    console.log("User login successful", user);
+    
     res.status(200).send({
       success: true,
       message: "Login successfully",
@@ -122,6 +122,7 @@ const loginUser = async (req, res) => {
       },
       token,
     });
+    console.log("User login successful", user);
   } catch (err) {
     console.error(err.message);
     return res.status(500).send({
