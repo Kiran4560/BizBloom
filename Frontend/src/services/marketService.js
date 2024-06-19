@@ -1,25 +1,23 @@
 import axios from "axios";
 // import { deleteMarket } from "../../../Backend/controllers/markets.controller";
-const token = localStorage.getItem("token");
-const configOptions = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
+
 /**************  /api/market/ ******************/
 export class MarketService {
-  async createMarket({
-    title,
-    phonenum,
-    imageURL,
-    address,
-    lat = "",
-    lng = "",
-    description = "",
-    openingTime,
-    closingTime,
-    profession,
-  }) {
+  async createMarket(
+    {
+      title,
+      phonenum,
+      imageURL,
+      address,
+      lat = "",
+      lng = "",
+      description = "",
+      openingTime,
+      closingTime,
+      profession,
+    },
+    token
+  ) {
     try {
       const res = await axios.post(
         "/api/market/addMarket",
@@ -35,7 +33,11 @@ export class MarketService {
           closingTime,
           profession,
         },
-        configOptions
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (res) {
         console.log(res);
@@ -46,9 +48,13 @@ export class MarketService {
     }
   }
 
-  async getAllMarkets() {
+  async getAllMarkets(token) {
     try {
-      const res = await axios.get("/api/market/get-all-market", configOptions);
+      const res = await axios.get("/api/market/get-all-market", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res) {
         console.log(res);
         return res.data;
@@ -58,9 +64,13 @@ export class MarketService {
     }
   }
 
-  async getUserMarket() {
+  async getUserMarket(token) {
     try {
-      const res = await axios.get("/api/market/get-user-market", configOptions);
+      const res = await axios.get("/api/market/get-user-market", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res) {
         console.log(res);
         return res.data;
@@ -83,7 +93,8 @@ export class MarketService {
       openingTime,
       closingTime,
       profession,
-    }
+    },
+    token
   ) {
     try {
       const res = await axios.put(
@@ -100,7 +111,11 @@ export class MarketService {
           closingTime,
           profession,
         },
-        configOptions
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (res) {
         console.log(res);
@@ -111,12 +126,13 @@ export class MarketService {
     }
   }
 
-  async deleteMarket({ marketId }) {
+  async deleteMarket(marketId, token) {
     try {
-      const res = await axios.delete(
-        `/api/market/delete-market/${marketId}`,
-        configOptions
-      );
+      const res = await axios.delete(`/api/market/delete-market/${marketId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res) {
         console.log(res);
         return res.data;

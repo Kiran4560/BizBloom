@@ -20,7 +20,7 @@ function MarketProfile() {
     useEffect(() => {
         ; (async () => {
             try {
-                const res = await marketService.getUserMarket();
+                const res = await marketService.getUserMarket(token);
                 if (res)
                     setMyMarkets(res.Usermarkets);
             } catch (error) {
@@ -28,13 +28,13 @@ function MarketProfile() {
                 setMyMarkets([]);
             }
         })()
-    }, [])
+    }, [token])
 
     return (
         <>
             <div className="flex flex-wrap justify-center items-center w-full h-2/3 mt-48 space-x-2">
                 {
-                    myMarkets.map(({ location, _id, title, phonenum, imageURL, address, description, rating, reviews, openingTime, closingTime, profession }) => (
+                    myMarkets?.map(({ location, _id, title, phonenum, imageURL, address, description, rating, reviews, openingTime, closingTime, profession }) => (
                         <div key={_id} className="max-w-sm rounded overflow-hidden shadow-lg bg-slate-400">
                             {imageURL && <img className="w-full" src={imageURL} alt={title} />}
                             <div className="px-6 py-4">
