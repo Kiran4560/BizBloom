@@ -1,22 +1,6 @@
 //import mongoose
 const mongoose = require("mongoose");
 
-//Schema for reviews
-const reviewSchema = new mongoose.Schema({
-  raterID: {
-    type: String,
-    required: true
-  },
-  rating: {
-    type: Number,
-    required: true,
-  },
-  review: {
-    type: String,
-    maxlength: 500,
-  },
-});
-
 //Schema for markets
 const marketSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -36,7 +20,6 @@ const marketSchema = new mongoose.Schema({
   rating: {
     type: Number,
   },
-  reviews: [reviewSchema],
   openingTime: {
     type: String,
     required: true,
@@ -52,7 +35,9 @@ const marketSchema = new mongoose.Schema({
   ownerId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User"
-   }
+   },
+   ratingReviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'RatingReview' }],
+ 
 });
 
 //exporting Market modal
