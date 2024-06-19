@@ -1,6 +1,13 @@
 //import mongoose
 const mongoose = require("mongoose");
 
+const ratingreviewSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  rating: { type: Number, required: true ,min: 1, max: 5},
+  review: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
 //Schema for markets
 const marketSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -20,6 +27,7 @@ const marketSchema = new mongoose.Schema({
   rating: {
     type: Number,
   },
+  reviews: [ratingreviewSchema],
   openingTime: {
     type: String,
     required: true,
@@ -35,9 +43,7 @@ const marketSchema = new mongoose.Schema({
   ownerId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User"
-   },
-   ratingReviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'RatingReview' }],
- 
+   }, 
 });
 
 //exporting Market modal
