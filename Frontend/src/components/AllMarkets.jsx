@@ -26,7 +26,7 @@ export default function AllMarkets() {
             ; (async () => {
                 try {
                     setError('');
-                    const res = await marketService.getAllMarkets();
+                    const res = await marketService.getAllMarkets(token);
                     setAllMarkets(res.markets)
                 } catch (error) {
                     setError(error);

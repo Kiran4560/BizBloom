@@ -42,7 +42,7 @@ function ProfileForm() {
     const submitHandler = async (data) => {
         try {
             setError('')
-            const res = await marketService.createMarket(data);
+            const res = await marketService.createMarket(data, token);
             if (res) {
                 alert('New Market Created');
                 navigate('/myProfile')
