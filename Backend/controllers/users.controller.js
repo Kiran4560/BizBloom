@@ -265,7 +265,9 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+const logout = async (req , res ) => {
 
+}
 exports.toggleAddFavMarket = toggleAddFavMarket;
 exports.signup = signup;
 exports.login = loginUser;

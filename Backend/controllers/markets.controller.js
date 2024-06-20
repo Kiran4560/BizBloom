@@ -153,21 +153,43 @@ const updateMarket = async (req, res) => {
 //****************************************************************GET-All-MARKET FUNCTION***********************************************************************************
 
 const getAllMarket = async (req, res) => {
+
+  // Get search, filter, and sort queries
+  const search = req.query.search || "";
+  const profession = req.query.profession || "";
+  const sort = req.query.sort || "";
+
+  // Build query object
+  const query = {
+    title: { $regex: search, $options: "i" }
+  };
+
+  // If profession filter is not empty
+  if (profession !== "") {
+    query.profession = profession;
+  }
+
+  let sortOption = {};
+  //if sort is present sort in descending order
+  if (sort !== "") {
+    sortOption[sort] = -1; 
+  }
+
   try {
-    //get all markets
-    let allMarkets = await Market.find({});
+    // Get all markets
+    const allMarkets = await Market.find(query).sort(sortOption);
 
     // Check if there are no markets
     if (allMarkets.length === 0) {
-      console.log("No market registered yet");
+      console.log("No market found");
       return res.status(200).json({ message: "No market found" });
     }
 
     console.log("All markets found successfully", allMarkets);
     return res.status(200).json({ markets: allMarkets });
   } catch (err) {
-    console.error(err.message);
-    return res.status(500).json({ error: err.message });
+    console.error("Error fetching markets:", err.message);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -178,7 +200,7 @@ const getUserMarket = async(req,res)=>{
 
         try{
          // Get all Markets of user
-         allMarkets = await Market.find({ownerId:ownerId});
+         allMarkets = await Market.find({ownerId:ownerId}).sort({rating:-1});
          console.log("User market data fetched successfully");
         }catch(err){
             console.error(err.message);
@@ -198,6 +220,7 @@ const getUserMarket = async(req,res)=>{
         return res.status(500).json({ error: err.message });
       }
 };
+/*======================================filter market===========================================*/
 
 exports.addMarket = addMarket;
 exports.deleteMarket = deleteMarket;
