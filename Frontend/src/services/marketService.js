@@ -48,13 +48,16 @@ export class MarketService {
     }
   }
 
-  async getAllMarkets(token) {
+  async getAllMarkets(token, search = "", profession = "") {
     try {
-      const res = await axios.get("/api/market/get-all-market", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `/api/market/get-all-market?search=${search}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res) {
         console.log(res);
         return res.data;

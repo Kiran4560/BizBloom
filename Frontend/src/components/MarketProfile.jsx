@@ -47,12 +47,6 @@ function MarketProfile() {
                 }
 
             </div>
-
-            <Link to='/createMarket' className='flex items-center justify-center mt-4'>
-                <button className='inline-flex w-1/3 items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/50 hover:text-white/90 active:bg-gray-900/80 transition ease-in-out duration-150'>
-                    Add New Market
-                </button>
-            </Link>
         </>
     )
 }

@@ -109,9 +109,16 @@ export default function Navbar() {
                             <button
                                 type="button"
                                 className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                onClick={() => navigate('/createMarket')}
+                            >
+                                Add Market
+                            </button>
+                            <button
+                                type="button"
+                                className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold  hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                                 onClick={() => navigate('/myProfile')}
                             >
-                                Market Profile
+                                My Markets
                             </button>
                             <button
                                 type="button"
