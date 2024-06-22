@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import marketService from '../services/marketService';
 
 const inputFieldStyle = "flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50";
@@ -13,6 +13,8 @@ function ProfileForm() {
     const user = useSelector(state => state.auth.userData);
     const token = useSelector(state => state.auth.userToken);
     const navigate = useNavigate();
+    const location = useLocation();
+    const post = location.state;
 
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
@@ -27,25 +29,36 @@ function ProfileForm() {
     }, [user, token])
 
     const { register, handleSubmit } = useForm({
-        title: '',
-        phonenum: '',
-        imageURL: " ",
-        address: '',
-        lat: 0,
-        lng: 0,
-        description: "",
-        openingTime: '',
-        closingTime: '',
-        profession: ''
+        defaultValues: {
+            title: post?.title || '',
+            phonenum: post?.phonenum || '',
+            imageURL: post?.imageURL || " ",
+            address: post?.address || '',
+            lat: post?.location.lat || 0,
+            lng: post?.location.lng || 0,
+            description: post?.description || "",
+            openingTime: post?.openingTime || '',
+            closingTime: post?.closingTime || '',
+            profession: post?.profession || ''
+        }
     }); // Setup all the default values as empty values
 
     const submitHandler = async (data) => {
         try {
             setError('')
-            const res = await marketService.createMarket(data, token);
-            if (res) {
-                alert('New Market Created');
-                navigate('/myProfile')
+            if (post) {
+                const res = await marketService.updateMarket(post._id, data, token);
+                if (res) {
+                    alert('Market Details Updated')
+                    navigate('/myProfile')
+                }
+            }
+            else {
+                const res = await marketService.createMarket(data, token);
+                if (res) {
+                    alert('New Market Created');
+                    navigate('/myProfile')
+                }
             }
         } catch (error) {
             setError(error);
@@ -158,7 +171,7 @@ function ProfileForm() {
                             type='submit'
                             className={submitButtonStyle}
                         >
-                            Create Market <ArrowRight className="ml-2" size={16} />
+                            {post ? "Update" : "Create"} Market <ArrowRight className="ml-2" size={16} />
                         </button>
                     </div>
                 </div>
