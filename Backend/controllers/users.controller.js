@@ -119,6 +119,8 @@ const loginUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
+        favourites:user.favourites,
+        userId:user._id
       },
       token,
     });
@@ -137,9 +139,10 @@ const loginUser = async (req, res) => {
 
 //add and remove fav market
 const toggleAddFavMarket = async (req, res) => {
-  const { userId, marketId } = req.body;
-
+  const { marketId } = req.body;
+  const userId = req.user._id;
   try {
+
     // Find the user by ID
     const user = await User.findOne({ _id: userId });
 
@@ -148,12 +151,9 @@ const toggleAddFavMarket = async (req, res) => {
       return res.status(401).json({ error: "No user with this id exists" });
     }
 
-    // Check if the market is already in the user's favorites
-    const existingMarket = user.favourites.find((mid) => {
-      console.log(mid, marketId, mid === marketId);
-      return mid === marketId;
-    });
-    console.log("Existing market id : ", existingMarket);
+     // Check if the market is already in the user's favorites
+    const existingMarket = user.favourites.find(mid => mid.equals(marketId));
+   
 
     if (existingMarket) {
       // Market is already in favorites, so remove it
@@ -162,7 +162,8 @@ const toggleAddFavMarket = async (req, res) => {
           { _id: userId },
           { $pull: { favourites: marketId } }
         );
-        res.status(201).json({ message: "Removed from fav" });
+        console.log("Market is removed from favourites");
+        res.status(201).json({ message: "Removed from favourites" });
       } catch (updateError) {
         console.error(
           `Error removing market from favorites: ${updateError.message}`
@@ -176,6 +177,7 @@ const toggleAddFavMarket = async (req, res) => {
           { _id: userId },
           { $push: { favourites: marketId } }
         );
+        console.log("Market is added in favourites");
         res.status(201).json({ message: "Added to fav" });
       } catch (updateError) {
         console.error(

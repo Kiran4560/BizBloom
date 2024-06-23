@@ -11,6 +11,7 @@ router.put("/update-market/:marketId",requireSignIn,marketController.updateMarke
 router.get("/get-all-market",marketController.getAllMarket);
 router.get("/get-user-market",requireSignIn,marketController.getUserMarket);
 
+
 // POST request to save a rating/review
 router.post("/rating-review", requireSignIn,ratingReviewController.RatingAndReview);
 

@@ -1,6 +1,6 @@
 const Market = require("../models/market");
 const User = require("../models/user");
-
+const Profession = require("../models/professions");
 //****************************************************************ADD-MARKET FUNTION***********************************************************************************
 
 //Creating new market
@@ -60,9 +60,18 @@ const addMarket = async (req, res) => {
       { _id: ownerId },
       { $push: { markets: newMarket._id } }
     );
-
+  
     // Fetch updated user
     const user = await User.findOne({ _id: ownerId });
+  
+    //Add to profession db
+     const existingProfession = await Profession.find({profession:profession});
+     if(!existingProfession){
+    const newProfession = new Profession({
+      profession:profession
+    });
+    await newProfession.save();
+  }
 
     return res.status(201).json({ market: newMarket, user: user });
   } catch (err) {
@@ -184,9 +193,12 @@ const getAllMarket = async (req, res) => {
       console.log("No market found");
       return res.status(200).json({ message: "No market found" });
     }
-
-    console.log("All markets found successfully", allMarkets);
-    return res.status(200).json({ markets: allMarkets });
+    
+        const allProfessions = await Profession.find({});
+        console.log("All unique Professions :", allProfessions);
+       
+    console.log("All markets found successfully", allMarkets,allProfessions);
+    return res.status(200).json({ markets: allMarkets, professions:allProfessions });
   } catch (err) {
     console.error("Error fetching markets:", err.message);
     return res.status(500).json({ error: "Internal server error" });
