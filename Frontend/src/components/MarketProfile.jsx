@@ -3,7 +3,7 @@ import marketService from '../services/marketService';
 import { Link, useNavigate } from 'react-router-dom';
 
 function MarketProfile() {
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token')
     const navigate = useNavigate();
 
