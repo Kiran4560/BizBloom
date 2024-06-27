@@ -110,17 +110,14 @@ const loginUser = async (req, res) => {
       expiresIn: "3d",
     });
 
-    
     res.status(200).send({
       success: true,
       message: "Login successfully",
       user: {
-        name: user.name,
+        name: user.username,
         email: user.email,
-        phone: user.phone,
-        address: user.address,
-        favourites:user.favourites,
-        userId:user._id
+        favourites: user.favourites,
+        userId: user._id,
       },
       token,
     });
@@ -139,10 +136,8 @@ const loginUser = async (req, res) => {
 
 //add and remove fav market
 const toggleAddFavMarket = async (req, res) => {
-  const { marketId } = req.body;
-  const userId = req.user._id;
+  const { marketId, userId } = req.body;
   try {
-
     // Find the user by ID
     const user = await User.findOne({ _id: userId });
 
@@ -151,9 +146,8 @@ const toggleAddFavMarket = async (req, res) => {
       return res.status(401).json({ error: "No user with this id exists" });
     }
 
-     // Check if the market is already in the user's favorites
-    const existingMarket = user.favourites.find(mid => mid.equals(marketId));
-   
+    // Check if the market is already in the user's favorites
+    const existingMarket = user.favourites.find((mid) => mid === marketId);
 
     if (existingMarket) {
       // Market is already in favorites, so remove it
@@ -267,9 +261,7 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
-const logout = async (req , res ) => {
-
-}
+const logout = async (req, res) => {};
 exports.toggleAddFavMarket = toggleAddFavMarket;
 exports.signup = signup;
 exports.login = loginUser;
