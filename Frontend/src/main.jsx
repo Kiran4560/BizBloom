@@ -5,7 +5,7 @@ import './index.css'
 import { Provider } from "react-redux"
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Home, Login, Signup, MarketProfile, AllMarkets, ProfileForm } from "./components/index.js"
+import { Home, Login, Signup, MarketProfile, AllMarkets, ProfileForm, Rating } from "./components/index.js"
 
 const router = createBrowserRouter([
   {
@@ -55,6 +55,14 @@ const router = createBrowserRouter([
           <ProfileForm />
           // </AuthLayout>
         )
+      },
+      {
+        path: '/rateProduct',
+        element: (
+          // <AuthLayout authenticated>
+          <Rating />
+          // </AuthLayout>
+        )
       }
     ]
   },
@@ -62,9 +70,9 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+  // </React.StrictMode>,
 )
