@@ -7,6 +7,8 @@ import Signup from "./Signup";
 import ProfileForm from "./ProfileForm";
 import MarketProfile from "./MarketProfile";
 import AllMarkets from "./AllMarkets";
+import Rating from "./Rating";
+import RatingStar from "./RatingStar";
 
 export {
   Home,
@@ -18,4 +20,6 @@ export {
   ProfileForm,
   MarketProfile,
   AllMarkets,
+  Rating,
+  RatingStar,
 };

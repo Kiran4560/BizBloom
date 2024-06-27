@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import marketService from '../services/marketService';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function MarketProfile() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const token = localStorage.getItem('token')
+    const user = useSelector(state => state.auth.userData);
+    const token = useSelector(state => state.auth.userToken)
     const navigate = useNavigate();
 
-    const [userData, setUserData] = useState(null);
     const [myMarkets, setMyMarkets] = useState([]);
     const [error, setError] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
-        if (token)
-            setUserData(user);
-        else
+        if (!token)
             navigate('/login')
-    }, [user, token])
+    }, [navigate, token])
 
     useEffect(() => {
         ; (async () => {
