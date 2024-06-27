@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { RatingStar } from './index';
+import marketService from '../services/marketService';
 
 const inputFieldStyle = "flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -39,8 +40,12 @@ export default function Rating() {
     const submitHandler = async ({ rating, review }) => {
         try {
             setError('');
-            console.log(rating);
-            console.log(review);
+            // console.log(rating);
+            // console.log(review);
+            const marketId = _id;
+            const res = await marketService.reviewMarket(marketId, token, rating, review);
+            if (res)
+                navigate('/markets');
 
         } catch (error) {
             setError(error);

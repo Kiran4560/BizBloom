@@ -86,13 +86,13 @@ export default function AllMarkets() {
                                 {(userData?.favourites.includes(_id)) ? "Remove from Favourite" : "Add To Favourite"}
                             </button>
                             {
-                                (reviews?.includes({ user: userData?.userId })) ?
-                                    null :
-                                    <button
-                                        className='bg-gray-700 hover:bg-gray-900 text-slate-400 hover:text-slate-200 py-2 px-4 rounded duration-200'
-                                        onClick={() => navigate('/rateProduct', { state: { _id, title, imageURL, avgRating: rating, reviews } })}
-                                    >Rate this Product
-                                    </button>
+                                // (reviews?.findIndex(item => item.user.toString() === userData.userId.toString()) !== -1) ?
+                                // null :
+                                <button
+                                    className='bg-gray-700 hover:bg-gray-900 text-slate-400 hover:text-slate-200 py-2 px-4 rounded duration-200'
+                                    onClick={() => navigate('/rateProduct', { state: { _id, title, imageURL, avgRating: rating, reviews } })}
+                                >{(reviews?.findIndex(item => item.user.toString() === userData.userId.toString()) !== -1) ? "Update Rating" : "Rate this Business"}
+                                </button>
                             }
                         </div>
                     ))

@@ -144,6 +144,31 @@ export class MarketService {
       console.log("MarketService :: deleteMarket :: ", error);
     }
   }
+
+  async reviewMarket(marketId, token, rating, review) {
+    try {
+      const res = await axios.post(
+        `/api/market/rating-review`,
+        {
+          marketId,
+          rating,
+          review,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res) {
+        console.log(res);
+        return res.data;
+      }
+    } catch (error) {
+      console.log("MarketService ::  reviewMarket :: ", error);
+    }
+  }
 }
 
 const marketService = new MarketService();
