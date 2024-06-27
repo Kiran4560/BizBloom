@@ -24,14 +24,15 @@ const addRatingReview = async (req, res) => {
 
     // Check if user has already reviewed
     const existingReviewIndex = market.reviews.findIndex(r => r.user.toString() === userId.toString());
-
+    let newReview;
     if (existingReviewIndex !== -1) {
       // Update existing review
       market.reviews[existingReviewIndex].rating = rating;
       market.reviews[existingReviewIndex].review = review;
+      newReview = market.reviews[existingReviewIndex];
     } else {
       // Add new review
-      const newReview = { user: userId, rating, review };
+      newReview = { user: userId, rating, review };
       market.reviews.push(newReview);
     }
     // Recalculate the average rating
