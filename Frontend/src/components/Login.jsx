@@ -13,7 +13,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const forgotPasswordHandler = () => {
-
+        navigate('/forgotPassword');
     }
 
     const loginHandler = async (data) => {

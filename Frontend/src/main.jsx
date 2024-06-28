@@ -6,6 +6,7 @@ import { Provider } from "react-redux"
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home, Login, Signup, MarketProfile, AllMarkets, ProfileForm, Rating } from "./components/index.js"
+import { ForgotPassword, ResetPassword } from './pages/index.js'
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,22 @@ const router = createBrowserRouter([
         element: (
           // <AuthLayout authenticated={false}>
           <Signup />
+          // </AuthLayout>
+        )
+      },
+      {
+        path: '/forgotPassword',
+        element: (
+          // <AuthLayout authenticated={false}>
+          <ForgotPassword />
+          // </AuthLayout>
+        )
+      },
+      {
+        path: '/resetPassword',
+        element: (
+          // <AuthLayout authenticated={false}>
+          <ResetPassword />
           // </AuthLayout>
         )
       },
