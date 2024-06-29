@@ -16,17 +16,13 @@ function ProfileForm() {
     const location = useLocation();
     const post = location.state;
 
-    const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
-        if (token)
-            setUserData(user);
-        else {
-            setUserData(null);
-            navigate('/login');
-        }
-    }, [user, token])
+        if (!token)
+            navigate('/login')
+    }, [navigate, token])
 
     const { register, handleSubmit } = useForm({
         defaultValues: {
@@ -34,8 +30,8 @@ function ProfileForm() {
             phonenum: post?.phonenum || '',
             imageURL: post?.imageURL || " ",
             address: post?.address || '',
-            lat: post?.location.lat || 0,
-            lng: post?.location.lng || 0,
+            lat: post?.location?.lat || 0,
+            lng: post?.location?.lng || 0,
             description: post?.description || "",
             openingTime: post?.openingTime || '',
             closingTime: post?.closingTime || '',
@@ -56,7 +52,7 @@ function ProfileForm() {
             else {
                 const res = await marketService.createMarket(data, token);
                 if (res) {
-                    alert('New Market Created');
+                    setMessage('New Market Created');
                     navigate('/myProfile')
                 }
             }
@@ -65,7 +61,7 @@ function ProfileForm() {
         }
     }
 
-    return (token) ? (
+    return (
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
             <form onSubmit={handleSubmit(submitHandler)}>
                 <div className='space-y-3'>
@@ -174,12 +170,9 @@ function ProfileForm() {
                             {post ? "Update" : "Create"} Market <ArrowRight className="ml-2" size={16} />
                         </button>
                     </div>
+                    {message && <div className="text-center text-sm text-green-500 mt-2">{message}</div>}
                 </div>
             </form>
-        </div>
-    ) : (
-        <div className='flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24'>
-            <h2 className='text-2xl font-semibold leading-7 text-black hover:bg-gray-100/50 hover:text-black/90 disabled:cursor-not-allowed disabled:opacity-50'>Login to your account...</h2>
         </div>
     )
 }

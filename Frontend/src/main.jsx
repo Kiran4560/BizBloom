@@ -5,8 +5,8 @@ import './index.css'
 import { Provider } from "react-redux"
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Home, Login, Signup, MarketProfile, AllMarkets, ProfileForm, Rating } from "./components/index.js"
-import { ForgotPassword, ResetPassword } from './pages/index.js'
+import { MarketProfile, AllMarkets, ProfileForm, Rating } from "./components"
+import { ForgotPassword, ResetPassword, Login, Signup, Home } from './pages'
 
 const router = createBrowserRouter([
   {

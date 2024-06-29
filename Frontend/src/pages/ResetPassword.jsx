@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
-import { ArrowRight } from 'lucide-react';
+import { SubmitButton } from "../components/index"
 
 export default function ResetPassword() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -61,12 +61,7 @@ export default function ResetPassword() {
                                 </div>
                             </div>
                             <div>
-                                <button
-                                    type="submit"
-                                    className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/50 hover:text-white/90"
-                                >
-                                    Reset Password <ArrowRight className="ml-2" size={16} />
-                                </button>
+                                <SubmitButton type="submit" btnText="Set New Password" />
                             </div>
                             {message && <div className="text-center text-sm text-green-500 mt-2">{message}</div>}
                         </div>

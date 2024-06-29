@@ -1,5 +1,5 @@
 import React from 'react'
-import { About, Features } from "./index"
+import { About, Features } from "../components/index"
 
 function Home() {
     return (
