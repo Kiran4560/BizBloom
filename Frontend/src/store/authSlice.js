@@ -4,6 +4,10 @@ const initialState = {
   isLoggedIn: false,
   userData: JSON.parse(localStorage.getItem("user")) || null,
   userToken: JSON.parse(localStorage.getItem("token")) || null,
+  userLocation: {
+    latitude: JSON.parse(localStorage.getItem("latitude")) || null,
+    longitude: JSON.parse(localStorage.getItem("longitude")) || null,
+  },
 };
 
 const authSlice = createSlice({
@@ -26,14 +30,23 @@ const authSlice = createSlice({
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("latitude");
+      localStorage.removeItem("longitude");
     },
     updateUser: (state, { payload }) => {
       state.userData = payload.userData;
       console.log(payload);
       localStorage.setItem("user", JSON.stringify(payload.userData));
     },
+    updateLocation: (state, { payload }) => {
+      state.userLocation.latitude = payload.latitude;
+      state.userLocation.longitude = payload.longitude;
+
+      localStorage.setItem("latitude", JSON.stringify(payload.latitude));
+      localStorage.setItem("longitude", JSON.stringify(payload.longitude));
+    },
   },
 });
 
-export const { login, logout, updateUser } = authSlice.actions;
+export const { login, logout, updateUser, updateLocation } = authSlice.actions;
 export default authSlice.reducer;

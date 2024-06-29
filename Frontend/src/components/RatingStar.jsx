@@ -1,7 +1,7 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Star } from 'lucide-react';
 
-const arr = ['Very Bad', 'Bad', 'Good', 'Very Good', 'Excellent'];
+// const arr = ['Very Bad', 'Bad', 'Good', 'Very Good', 'Excellent'];
 const RatingStar = forwardRef(({ value, onChange }, ref) => {
     const [hoverRating, setHoverRating] = useState(0);
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import marketService from '../services/marketService';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function MarketProfile() {
-    const user = useSelector(state => state.auth.userData);
+    const userData = useSelector(state => state.auth.userData);
     const token = useSelector(state => state.auth.userToken)
     const navigate = useNavigate();
 
@@ -59,9 +59,11 @@ function MarketProfile() {
                         <div key={_id} className="max-w-sm rounded overflow-hidden shadow-lg bg-slate-400">
                             {imageURL && <img className="w-full" src={imageURL} alt={title} />}
                             <div className="px-6 py-4">
+                                {error && <span className="bg-red-500 text-slate-300 text-base">{error.message}</span>}
                                 {title && <div className="font-bold text-xl mb-2">{title}</div>}
                                 {description && <div className="font-semibold text-md mb-2 text-gray-600">{description}</div>}
                                 {address && <p className="text-gray-700 text-base">{address}</p>}
+                                {phonenum && <p className="text-gray-600 text-base">{phonenum}</p>}
                             </div>
                             <button
                                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded m-2"

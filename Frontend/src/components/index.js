@@ -1,21 +1,19 @@
 import About from "./About";
 import Features from "./Features";
 import Navbar from "./Navbar";
-import ProfileForm from "./ProfileForm";
-import MarketProfile from "./MarketProfile";
-import AllMarkets from "./AllMarkets";
-import Rating from "./Rating";
 import RatingStar from "./RatingStar";
 import SubmitButton from "./SubmitButton";
+import MarketCard from "./MarketCard";
+import Input from "./Input";
+import InputWithRef from "./InputWithRef";
 
 export {
   About,
   Features,
   Navbar,
-  ProfileForm,
-  MarketProfile,
-  AllMarkets,
-  Rating,
   RatingStar,
   SubmitButton,
+  MarketCard,
+  Input,
+  InputWithRef,
 };
