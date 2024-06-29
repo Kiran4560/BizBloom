@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { RatingStar } from '../components';
 
 const MarketCard = ({ market, toggleFav, isFavourite, error }) => {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ const MarketCard = ({ market, toggleFav, isFavourite, error }) => {
                 {description && <div className="font-semibold text-md mb-2 text-gray-600">{description}</div>}
                 {address && <p className="text-gray-700 text-base">{address}</p>}
                 {phonenum && <p className="text-gray-600 text-base">{phonenum}</p>}
+                {rating >= 0 && <RatingStar rating={rating} />}
             </div>
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded duration-200"

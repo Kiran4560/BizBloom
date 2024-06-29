@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
-import { RatingStar, InputWithRef, SubmitButton } from '../components';
+import { RatingInput, InputWithRef, SubmitButton } from '../components';
 import marketService from '../services/marketService';
 
 export default function Rating() {
@@ -69,7 +69,7 @@ export default function Rating() {
                                 name="rating"
                                 control={control}
                                 render={({ field }) => (
-                                    <RatingStar ref={ratingRef} {...field} />
+                                    <RatingInput ref={ratingRef} {...field} />
                                 )}
                             />
                         </label>
