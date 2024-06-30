@@ -3,6 +3,20 @@ const User = require("../models/user");
 const Profession = require("../models/professions");
 //****************************************************************ADD-MARKET FUNTION***********************************************************************************
 
+//calculate distance between two points
+const calculateDistance = (lat1, lng1, lat2, lng2) => {
+  const toRad = (value) => (value * Math.PI) / 180;
+  const R = 6371; // Earth's radius in kilometers
+
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in kilometers
+};
 //Creating new market
 
 const addMarket = async (req, res) => {
@@ -164,9 +178,16 @@ const updateMarket = async (req, res) => {
 const getAllMarket = async (req, res) => {
 
   // Get search, filter, and sort queries
+
   const search = req.query.search || "";
   const profession = req.query.profession || "";
-  const sort = req.query.sort || "";
+
+  //sort on basis of rating
+  const rating = req.query.rating || "";
+
+  //sort on basis of distance
+  const userLat = parseFloat(req.query.lat); // User's latitude
+  const userLng = parseFloat(req.query.lng); // User's longitude
 
   // Build query object
   const query = {
@@ -180,25 +201,39 @@ const getAllMarket = async (req, res) => {
 
   let sortOption = {};
   //if sort is present sort in descending order
-  if (sort !== "") {
-    sortOption[sort] = -1; 
+  if (rating !== "") {
+    sortOption[rating] = -1; 
   }
 
   try {
     // Get all markets
-    const allMarkets = await Market.find(query).sort(sortOption);
+    let allMarkets = await Market.find(query).sort(sortOption);
+
 
     // Check if there are no markets
     if (allMarkets.length === 0) {
       console.log("No market found");
       return res.status(200).json({ message: "No market found" });
     }
-    
-        const allProfessions = await Profession.find({});
-        console.log("All unique Professions :", allProfessions);
+
+    // Calculate distance for each market and add it to the market object
+    if(!isNaN(userLat) && !isNaN(userLng)){
+       allMarkets = allMarkets.map((market)=>{
+        const distance = calculateDistance(
+          userLat,
+          userLng,
+          market.location.lat,
+          market.location.lng
+        );
+        return {...market._doc, distance};
+       });
+    }
+
+     // Sort markets based on distance
+     allMarkets.sort((a, b) => a.distance - b.distance);
        
-    console.log("All markets found successfully", allMarkets,allProfessions);
-    return res.status(200).json({ markets: allMarkets, professions:allProfessions });
+    console.log("All markets found successfully", allMarkets);
+    return res.status(200).json({ markets: allMarkets });
   } catch (err) {
     console.error("Error fetching markets:", err.message);
     return res.status(500).json({ error: "Internal server error" });
