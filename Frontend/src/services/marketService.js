@@ -48,10 +48,10 @@ export class MarketService {
     }
   }
 
-  async getAllMarkets(token, search = "", profession = "") {
+  async getAllMarkets(token, search = "", profession = "", rating = "") {
     try {
       const res = await axios.get(
-        `/api/market/get-all-market?search=${search}`,
+        `/api/market/get-all-market?search=${search}&rating=${rating}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

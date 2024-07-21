@@ -9,6 +9,7 @@ import InputWithRef from "./InputWithRef";
 import HalfStar from "./HalfStar";
 import RatingStar from "./RatingStar";
 import Tooltip from "./Tooltip";
+import Map from "./Map";
 
 export {
   About,
@@ -22,4 +23,5 @@ export {
   RatingStar,
   HalfStar,
   Tooltip,
+  Map,
 };

@@ -27,7 +27,7 @@ function App() {
     <>
       <Navbar />
       <Outlet />
-      <div>
+      {/* <div>
         <h1>Current Location</h1>
         {location.latitude && location.longitude ? (
           <div>
@@ -38,7 +38,7 @@ function App() {
           <p>Fetching location...</p>
         )}
         {error && <p>Error: {error}</p>}
-      </div>
+      </div> */}
     </>
   )
 }

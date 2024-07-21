@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
 import { updateUser } from '../store/authSlice';
-import { MarketCard, Input } from '../components';
+import { MarketCard, Input, InputWithRef } from '../components';
 
 
 export default function AllMarkets() {
@@ -16,6 +16,7 @@ export default function AllMarkets() {
     const [allMarkets, setAllMarkets] = useState([]);
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
+    const [isSortByRating, setIsSortByRating] = useState(false);
 
     useEffect(() => {
         if (!token)
@@ -27,7 +28,7 @@ export default function AllMarkets() {
             ; (async () => {
                 try {
                     setError('');
-                    const res = await marketService.getAllMarkets(token, search);
+                    const res = await marketService.getAllMarkets(token, search, "", isSortByRating ? "rating" : "");
                     setAllMarkets(res.markets)
                 } catch (error) {
                     setError(error);
@@ -35,7 +36,7 @@ export default function AllMarkets() {
                 }
             })()
         }
-    }, [token, search])
+    }, [token, search, isSortByRating])
 
 
     const toggleFav = async (_id) => {
@@ -58,12 +59,22 @@ export default function AllMarkets() {
 
     return (
         <>
-            <div className='flex flex-wrap justify-end px-4 w-full mt-36'>
+            <div className='flex flex-wrap justify-end px-4 w-full mt-36 space-x-3'>
                 <Input
                     placeholder='Search By Title...'
                     className='w-1/4'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                />
+                {/* <label htmlFor='sortbyRating'>Sort By Rating</label>
+                <input type="checkbox" name="Sort by Rating" id="sortbyRating" checked={isSortByRating} onChange={() => setIsSortByRating((prev) => !prev)} /> */}
+                <InputWithRef
+                    label='Sort By Rating'
+                    type='checkbox'
+                    checked={isSortByRating}
+                    setIsSortByRating={setIsSortByRating}
+                    onChange={() => setIsSortByRating((prev) => !prev)}
+                    className='h-5'
                 />
             </div>
             <div className="flex flex-wrap justify-center items-center w-full h-2/3 mt-24 mb-48 space-x-2 space-y-2">
