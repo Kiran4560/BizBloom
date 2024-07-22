@@ -35,20 +35,21 @@ const inputFields = [
         label: "Address",
         placeholder: 'Enter your address here...',
         fieldName: 'address',
+        readOnly: true
     },
     {
         type: "number",
         label: "Latitude",
         placeholder: 'Enter your Latitude here...',
         fieldName: 'lat',
-
+        readOnly: true
     },
     {
         type: "number",
         label: "Longitude",
         placeholder: 'Enter your Longitude here...',
         fieldName: 'lng',
-
+        readOnly: true
     },
     {
         type: "text",
@@ -148,6 +149,7 @@ function ProfileForm() {
                                 type={inputField.type}
                                 label={inputField.label}
                                 placeholder={inputField.placeholder}
+                                readOnly={inputField.readOnly}
                                 {...register(inputField.fieldName, inputField.options)}
                             />
                         ))

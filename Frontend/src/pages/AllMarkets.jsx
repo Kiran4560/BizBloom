@@ -10,13 +10,17 @@ import { MarketCard, Input, InputWithRef } from '../components';
 export default function AllMarkets() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const userLocation = useSelector(state => state.auth.userLocation);
     const userData = useSelector(state => state.auth.userData);
     const token = useSelector(state => state.auth.userToken);
 
     const [allMarkets, setAllMarkets] = useState([]);
-    const [error, setError] = useState('');
-    const [search, setSearch] = useState('');
+    const [allProfessions, setAllProfessions] = useState([]);
+    const [selectedProfession, setSelectedProfession] = useState("");
     const [isSortByRating, setIsSortByRating] = useState(false);
+    const [isSortByDistance, setIsSortByDistance] = useState(false);
+    const [search, setSearch] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (!token)
@@ -28,15 +32,16 @@ export default function AllMarkets() {
             ; (async () => {
                 try {
                     setError('');
-                    const res = await marketService.getAllMarkets(token, search, "", isSortByRating ? "rating" : "");
-                    setAllMarkets(res.markets)
+                    const res = await marketService.getAllMarkets(token, search, selectedProfession, isSortByRating ? "rating" : "", isSortByDistance ? userLocation?.latitude : "", isSortByDistance ? userLocation?.longitude : "");
+                    setAllMarkets(res.markets);
+                    setAllProfessions(res.markets.map(item => item.profession).filter((v, i, a) => a.indexOf(v) === i)); // Get unique professions
                 } catch (error) {
                     setError(error);
                     setAllMarkets([]);
                 }
             })()
         }
-    }, [token, search, isSortByRating])
+    }, [token, search, isSortByRating, selectedProfession, isSortByDistance])
 
 
     const toggleFav = async (_id) => {
@@ -59,21 +64,39 @@ export default function AllMarkets() {
 
     return (
         <>
-            <div className='flex flex-wrap justify-end px-4 w-full mt-36 space-x-3'>
+            <div className='flex flex-wrap justify-evenly px-4 w-full mt-36 space-x-3'>
                 <Input
                     placeholder='Search By Title...'
                     className='w-1/4'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                {/* <label htmlFor='sortbyRating'>Sort By Rating</label>
-                <input type="checkbox" name="Sort by Rating" id="sortbyRating" checked={isSortByRating} onChange={() => setIsSortByRating((prev) => !prev)} /> */}
+                <select
+                    className="border rounded px-4 py-2 text-sm bg-gray-700"
+                    value={selectedProfession}
+                    onChange={(e) => setSelectedProfession(e.target.value)}
+                >
+                    <option value="" className='text-sm bg-gray-700'>All Professions</option>
+                    {allProfessions.map((profession, index) => (
+                        <option key={index} value={profession} className='text-sm bg-gray-700'>{profession}</option>
+                    ))}
+                </select>
+
                 <InputWithRef
                     label='Sort By Rating'
                     type='checkbox'
                     checked={isSortByRating}
                     setIsSortByRating={setIsSortByRating}
                     onChange={() => setIsSortByRating((prev) => !prev)}
+                    className='h-5'
+                />
+
+                <InputWithRef
+                    label='Sort By Distance'
+                    type='checkbox'
+                    checked={isSortByDistance}
+                    setIsSortByRating={setIsSortByDistance}
+                    onChange={() => setIsSortByDistance((prev) => !prev)}
                     className='h-5'
                 />
             </div>

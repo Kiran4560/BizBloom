@@ -21,8 +21,15 @@ const LocationMarker = ({ setValue, watch }) => {
             setPosition([e.latlng.lat, e.latlng.lng]);
             setValue('lat', e.latlng.lat);
             setValue('lng', e.latlng.lng);
+            fetchAddress(e.latlng.lat, e.latlng.lng);
         },
     });
+
+    const fetchAddress = async (lat, lng) => {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+        const data = await response.json();
+        setValue('address', data.display_name);
+    };
 
     useEffect(() => {
         map.setView([lat, lng], map.getZoom());
@@ -35,6 +42,7 @@ const LocationMarker = ({ setValue, watch }) => {
                 const { lat, lng } = marker.getLatLng();
                 setValue('lat', lat);
                 setValue('lng', lng);
+                fetchAddress(lat, lng);
             }
         }} />
     );
